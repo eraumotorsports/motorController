@@ -30,6 +30,9 @@
 #define ICE_FINAL_DRIVE_RATIO 3.667
 #define EM_FINAL_DRIVE_RATIO  2.667
 #define PRIMARY_RATIO         3.666
+#define EM_SLOPE              0.0647
+#define EM_OFFSET             6.8341
+#define K_FACTOR              0
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 enum Mode {Gas, Electric, Hybrid};
@@ -130,7 +133,7 @@ void SetMotorPower()
           emRpm = differentialRpm / EM_FINAL_DRIVE_RATIO;
 
           // Calculate PWM output
-          pwmOut = (emRpm * 0.0647) + 6.8341;
+          pwmOut = (emRpm * EM_SLOPE) + EM_OFFSET + K_FACTOR;
         }
 
         // Turn motor off when in neutral or bad gear read of gear postion
