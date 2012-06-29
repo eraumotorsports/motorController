@@ -4,7 +4,7 @@
 
   There are 3 modes of operation...
 
-    Gas: Regardless of peda/rpm values the motor will always be off.
+    Gas: Regardless of pedal/rpm values the motor will always be off.
     Electric: The motor output will be controled by pedal position.
     Hybrid: The motor output is determined by engine RPM.
 
@@ -18,8 +18,8 @@
 #define VERBOSE
 
 // Pin Configuration
-#define PIN_RPM         2
-#define PIN_GEAR_POS    6
+#define PIN_RPM         19
+#define PIN_GEAR_POS    5
 #define PIN_MOTOR_OUT   7
 #define PIN_PEDAL_POS   8
 #define PIN_GAS_MODE    9
@@ -29,7 +29,7 @@
 #define MIN_HYBRID_PEDAL_POS  10
 #define ICE_FINAL_DRIVE_RATIO 3.667
 #define EM_FINAL_DRIVE_RATIO  2.667
-#define PRIMARY_RATIO         3.666
+#define PRIMARY_RATIO         3.666    //"PRIMARY_RATIO" was not declared in this scope
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
 #define K_FACTOR              0
@@ -61,7 +61,7 @@ void setup()
   pinMode(PIN_ELC_MODE, INPUT);
   pinMode(PIN_GAS_MODE, INPUT);
 
-  attachInterrupt(0, rpm_count, FALLING);
+  attachInterrupt(4, rpm_count, FALLING);
 
   rpmCount = 0;
   engineRpm = 0;
@@ -90,11 +90,11 @@ int GetGearPosition(int val)
 
 void UpdateEngineRpm()
 {
-  detachInterrupt(0);
+  detachInterrupt(4);
   engineRpm = 30 * 1000 / (millis() - timeOld) * rpmCount;
   timeOld = millis();
   rpmCount = 0;
-  attachInterrupt(0, rpm_count, FALLING);
+  attachInterrupt(4, rpm_count, FALLING);
 }
 
 Mode GetHybridMode()
