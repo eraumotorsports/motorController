@@ -14,8 +14,6 @@
 
 *******************************************************************************/
 
-/// TODO: Add engine RPM code
-
 // To disable serial messages, comment out the following line
 #define VERBOSE
 
