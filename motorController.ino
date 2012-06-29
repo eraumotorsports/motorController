@@ -20,6 +20,7 @@
 #define VERBOSE
 
 // Pin Configuration
+#define PIN_RPM         2
 #define PIN_GEAR_POS    6
 #define PIN_MOTOR_OUT   7
 #define PIN_PEDAL_POS   8
@@ -35,8 +36,16 @@ const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 enum Mode {Gas, Electric, Hybrid};
 
-double engineRpm, differentialRpm, emRpm, pwmOut = 0;
+double differentialRpm, emRpm, pwmOut = 0;
 int currentGear, pedalPos;
+unsigned int engineRpm;
+unsigned long timeOld;
+volatile int rpmCount;
+
+void rpm_count()
+{
+  rpmCount++;
+}
 
 void setup()
 {
@@ -50,6 +59,12 @@ void setup()
   pinMode(PIN_PEDAL_POS, INPUT);
   pinMode(PIN_ELC_MODE, INPUT);
   pinMode(PIN_GAS_MODE, INPUT);
+
+  attachInterrupt(0, rpm_count, FALLING);
+
+  rpmCount = 0;
+  engineRpm = 0;
+  timeOld = 0;
 }
 
 int GetGearPosition(int val)
@@ -70,6 +85,15 @@ int GetGearPosition(int val)
     return 6;
   else                              // bad reading
     return -1;
+}
+
+void UpdateEngineRpm()
+{
+  detachInterrupt(0);
+  engineRpm = 30 * 1000 / (millis() - timeOld) * rpmCount;
+  timeOld = millis();
+  rpmCount = 0;
+  attachInterrupt(0, rpm_count, FALLING);
 }
 
 Mode GetHybridMode()
@@ -144,10 +168,16 @@ void PrintValues()
 
 void loop()
 {
+  // Update current gear
   currentGear = GetGearPosition(analogRead(PIN_GEAR_POS));
-  pedalPos = analogRead(PIN_PEDAL_POS);
-  pedalPos = map(pedalPos, 75, 623, 0, 255);
 
+  // Update current pedal position
+  pedalPos = map(analogRead(PIN_PEDAL_POS), 75, 623, 0, 255);
+
+  // Update current engine RPM
+  UpdateEngineRpm();
+
+  // Update the motor output based on current inputs
   SetMotorPower();
 
 #ifdef VERBOSE
