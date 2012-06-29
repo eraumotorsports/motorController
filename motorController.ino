@@ -152,5 +152,5 @@ void loop()
 
 #ifdef VERBOSE
   PrintValues();
- #endif
+#endif
 }
