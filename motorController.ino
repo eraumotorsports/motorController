@@ -99,6 +99,7 @@ void UpdateEngineRpm()
 
 Mode GetHybridMode()
 {
+  // These may need changed to check if LOW, and pull-up resistors enabled.
   if (digitalRead(PIN_GAS_MODE) == HIGH)
     return Gas;
   else if (digitalRead(PIN_ELC_MODE) == HIGH)
