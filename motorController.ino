@@ -14,6 +14,8 @@
 
 *******************************************************************************/
 
+#include "mode.h"
+
 // To disable serial messages, comment out the following line
 #define VERBOSE
 
@@ -29,13 +31,11 @@
 #define MIN_HYBRID_PEDAL_POS  10
 #define ICE_FINAL_DRIVE_RATIO 3.667
 #define EM_FINAL_DRIVE_RATIO  2.667
-#define PRIMARY_RATIO         3.666    //"PRIMARY_RATIO" was not declared in this scope
+#define PRIMARY_RATIO         3.666
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
 #define K_FACTOR              0
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
-
-enum Mode {Gas, Electric, Hybrid};
 
 double differentialRpm, emRpm, pwmOut = 0;
 int currentGear, pedalPos;
@@ -128,7 +128,7 @@ void SetMotorPower()
         {
           // Calculate Differential RPM
           differentialRpm = engineRpm /
-            (PRIMARY_RATIO * GEAR_RATIOS[currentGear] * ICE_FINAL_DRIVE_RATIO);
+            ( PRIMARY_RATIO * GEAR_RATIOS[currentGear] * ICE_FINAL_DRIVE_RATIO);
 
           // Calculate needed electic motor RPM
           emRpm = differentialRpm / EM_FINAL_DRIVE_RATIO;
