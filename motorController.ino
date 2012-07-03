@@ -60,6 +60,8 @@ void setup()
   pinMode(PIN_PEDAL_POS, INPUT);
   pinMode(PIN_ELC_MODE, INPUT);
   pinMode(PIN_GAS_MODE, INPUT);
+  digitalWrite(PIN_ELC_MODE, HIGH);
+  digitalWrite(PIN_GAS_MODE, HIGH);
 
   attachInterrupt(4, rpm_count, FALLING);
 
@@ -99,10 +101,9 @@ void UpdateEngineRpm()
 
 Mode GetHybridMode()
 {
-  // These may need changed to check if LOW, and pull-up resistors enabled.
-  if (digitalRead(PIN_GAS_MODE) == HIGH)
+  if (digitalRead(PIN_GAS_MODE) == LOW)
     return Gas;
-  else if (digitalRead(PIN_ELC_MODE) == HIGH)
+  else if (digitalRead(PIN_ELC_MODE) == LOW)
     return Electric;
   else
     return Hybrid;
