@@ -36,6 +36,7 @@
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
 #define K_FACTOR              0
+#define MIN_RPM_PULSES        8
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 double differentialRpm, emRpm, pwmOut = 0;
@@ -93,6 +94,9 @@ int GetGearPosition(int val)
 
 void UpdateEngineRpm()
 {
+  if (rpmCount < MIN_RPM_PULSES)
+      return;
+
   detachInterrupt(4);
   int deltaT = millis() - timeOld;
   engineRpm = 30 * 1000 / deltaT * rpmCount;
