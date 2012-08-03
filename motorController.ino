@@ -1,5 +1,5 @@
 /*******************************************************************************
-                          ERAU Formula Hybrid Motor Controller
+                      ERAU Formula Hybrid Motor Controller
 ********************************************************************************
 
   There are 3 modes of operation...
