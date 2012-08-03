@@ -1,5 +1,5 @@
 /*******************************************************************************
-	                   ERAU Formula Hybrid Motor Controller
+                          ERAU Formula Hybrid Motor Controller
 ********************************************************************************
 
   There are 3 modes of operation...
@@ -155,6 +155,7 @@ void SetMotorPower()
   }
 }
 
+#ifdef VERBOSE
 void PrintValues()
 {
   Serial.print("Pedal: ");
@@ -168,6 +169,7 @@ void PrintValues()
   Serial.print(", Out: ");
   Serial.println(pwmOut);
 }
+#endif
 
 void loop()
 {
