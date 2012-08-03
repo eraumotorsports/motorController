@@ -18,6 +18,7 @@
 
 // To disable serial messages, comment out the following line
 #define VERBOSE
+#define RPMDEBUG
 
 // Pin Configuration
 #define PIN_RPM         19
@@ -93,7 +94,18 @@ int GetGearPosition(int val)
 void UpdateEngineRpm()
 {
   detachInterrupt(4);
-  engineRpm = 30 * 1000 / (millis() - timeOld) * rpmCount;
+  int deltaT = millis() - timeOld;
+  engineRpm = 30 * 1000 / deltaT * rpmCount;
+
+#ifdef RPMDEBUG
+  Serial.print("RPM: ");
+  Serial.print(engineRpm);
+  Serial.print(", Pulse Count: ");
+  Serial.print(rpmCount);
+  Serial.print(", Delta T: ");
+  Serial.println(deltaT);
+#endif
+
   timeOld = millis();
   rpmCount = 0;
   attachInterrupt(4, rpm_count, FALLING);
