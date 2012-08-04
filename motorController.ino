@@ -42,6 +42,7 @@ const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 double differentialRpm, emRpm, freq, pwmOut = 0;
 int currentGear, pedalPos;
 unsigned int engineRpm;
+String curMode;
 
 void setup()
 {
@@ -109,10 +110,12 @@ void SetMotorPower()
     case Gas:
       // Keep the motor turned off
       analogWrite(PIN_MOTOR_OUT, 0);
+      curMode = "Gas";
       break;
     case Electric:
       // Use only the pedal position
       analogWrite(PIN_MOTOR_OUT, pedalPos);
+      curMode = "Elec";
       break;
     case Hybrid:
       if (pedalPos > MIN_HYBRID_PEDAL_POS)
@@ -144,6 +147,7 @@ void SetMotorPower()
         // Turn off motor to regenerate power
         analogWrite(PIN_MOTOR_OUT, 0);
       }
+      curMode = "Hybrid";
       break;
   }
 }
@@ -151,7 +155,9 @@ void SetMotorPower()
 #ifdef VERBOSE
 void PrintValues()
 {
-  Serial.print("Pedal: ");
+  Serial.print("Mode : ");
+  Serial.print(curMode);
+  Serial.print(", Pedal: ");
   Serial.print(pedalPos);
   Serial.print(", Freq: ");
   Serial.print(freq);
