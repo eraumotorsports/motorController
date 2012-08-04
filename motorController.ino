@@ -86,6 +86,8 @@ void UpdateEngineRpm()
   if (FreqMeasure.available())
   {
     freq = F_CPU / FreqMeasure.read();
+    if (freq > 104)
+        return;
     engineRpm = freq * 120;
   }
 }
