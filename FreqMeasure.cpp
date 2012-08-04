@@ -24,7 +24,7 @@
  */
 
 #include "FreqMeasure.h"
-#include "util/capture.h"
+#include "capture.h"
 
 #define FREQMEASURE_BUFFER_LEN 12
 static volatile uint32_t buffer_value[FREQMEASURE_BUFFER_LEN];
