@@ -36,7 +36,7 @@
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
 #define K_FACTOR              0
-#define RPM_MEASURES          2
+#define MAX_HZ                104
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 double differentialRpm, emRpm, freq, pwmOut = 0;
@@ -86,7 +86,7 @@ void UpdateEngineRpm()
   if (FreqMeasure.available())
   {
     freq = F_CPU / FreqMeasure.read();
-    if (freq > 104)
+    if (freq > MAX_HZ)
         return;
     engineRpm = freq * 120;
   }
