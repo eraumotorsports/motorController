@@ -14,14 +14,14 @@
 
 *******************************************************************************/
 
+#include "FreqMeasure.h"
 #include "mode.h"
 
 // To disable serial messages, comment out the following line
 #define VERBOSE
-#define RPMDEBUG
 
 // Pin Configuration
-#define PIN_RPM         19
+#define PIN_RPM         49
 #define PIN_GEAR_POS    5
 #define PIN_MOTOR_OUT   7
 #define PIN_PEDAL_POS   8
@@ -36,19 +36,12 @@
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
 #define K_FACTOR              0
-#define MIN_RPM_PULSES        8
+#define RPM_MEASURES          2
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 double differentialRpm, emRpm, pwmOut = 0;
 int currentGear, pedalPos;
 unsigned int engineRpm;
-unsigned long timeOld;
-volatile int rpmCount;
-
-void rpm_count()
-{
-  rpmCount++;
-}
 
 void setup()
 {
@@ -65,11 +58,7 @@ void setup()
   digitalWrite(PIN_ELC_MODE, HIGH);
   digitalWrite(PIN_GAS_MODE, HIGH);
 
-  attachInterrupt(4, rpm_count, FALLING);
-
-  rpmCount = 0;
-  engineRpm = 0;
-  timeOld = 0;
+  FreqMeasure.begin();
 }
 
 int GetGearPosition(int val)
@@ -94,25 +83,18 @@ int GetGearPosition(int val)
 
 void UpdateEngineRpm()
 {
-  if (rpmCount < MIN_RPM_PULSES)
-      return;
-
-  detachInterrupt(4);
-  int deltaT = millis() - timeOld;
-  engineRpm = 30 * 1000 / deltaT * rpmCount;
-
-#ifdef RPMDEBUG
-  Serial.print("RPM: ");
-  Serial.print(engineRpm);
-  Serial.print(", Pulse Count: ");
-  Serial.print(rpmCount);
-  Serial.print(", Delta T: ");
-  Serial.println(deltaT);
-#endif
-
-  timeOld = millis();
-  rpmCount = 0;
-  attachInterrupt(4, rpm_count, FALLING);
+  int count = 0;
+  int sum = 0;
+  while (count < RPM_MEASURES)
+  {
+    if (FreqMeasure.available())
+    {
+      sum = sum + FreqMeasure.read();
+      count++;
+    }
+  }
+  double freq = F_CPU / (sum / count);
+  engineRpm = freq * 120;
 }
 
 Mode GetHybridMode()
