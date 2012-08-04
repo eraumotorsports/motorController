@@ -39,7 +39,7 @@
 #define RPM_MEASURES          2
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
-double differentialRpm, emRpm, pwmOut = 0;
+double differentialRpm, emRpm, freq, pwmOut = 0;
 int currentGear, pedalPos;
 unsigned int engineRpm;
 
@@ -83,18 +83,11 @@ int GetGearPosition(int val)
 
 void UpdateEngineRpm()
 {
-  int count = 0;
-  int sum = 0;
-  while (count < RPM_MEASURES)
+  if (FreqMeasure.available())
   {
-    if (FreqMeasure.available())
-    {
-      sum = sum + FreqMeasure.read();
-      count++;
-    }
+    freq = F_CPU / FreqMeasure.read();
+    engineRpm = freq * 120;
   }
-  double freq = F_CPU / (sum / count);
-  engineRpm = freq * 120;
 }
 
 Mode GetHybridMode()
@@ -158,6 +151,8 @@ void PrintValues()
 {
   Serial.print("Pedal: ");
   Serial.print(pedalPos);
+  Serial.print(", Freq: ");
+  Serial.print(freq);
   Serial.print(", Eng: ");
   Serial.print(engineRpm);
   Serial.print(", Diff: ");
