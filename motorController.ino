@@ -131,7 +131,7 @@ void SetMotorPower()
           emRpm = differentialRpm / EM_FINAL_DRIVE_RATIO;
 
           // Calculate PWM output
-          pwmOut = (emRpm * EM_SLOPE) + EM_OFFSET + K_FACTOR;
+          pwmOut = (emRpm * EM_SLOPE) + EM_OFFSET - K_FACTOR;
         }
 
         // Turn motor off when in neutral or bad gear read of gear postion
