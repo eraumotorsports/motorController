@@ -29,14 +29,14 @@
 #define PIN_ELC_MODE    10
 
 // Constants
-#define MIN_HYBRID_PEDAL_POS  10
+#define MIN_HYBRID_PEDAL_POS  60
 #define ICE_FINAL_DRIVE_RATIO 3.667
 #define EM_FINAL_DRIVE_RATIO  2.667
 #define PRIMARY_RATIO         3.666
 #define EM_SLOPE              0.0647
 #define EM_OFFSET             6.8341
-#define K_FACTOR              0
-#define MAX_HZ                104
+#define K_FACTOR              20
+#define MAX_HZ                98
 const double GEAR_RATIOS[] = {0, 2.00, 1.611, 1.333, 1.086, 0.920, 0.814};
 
 double differentialRpm, emRpm, freq, pwmOut = 0;
