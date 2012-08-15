@@ -8,9 +8,9 @@
     Electric: The motor output will be controled by pedal position.
     Hybrid: The motor output is determined by engine RPM.
 
-  Operation mode is determined by mode inputs pins. Set a mode pin HIGH to
-  enable the corresponding mode.  If both pins are LOW it will result in
-  Hybrid mode.
+  Operation mode is determined by mode inputs pins. Pull a mode pin LOW to
+  enable the corresponding mode.  If both pins are HIGH or not connected
+  it will result in Hybrid mode.
 
 *******************************************************************************/
 
